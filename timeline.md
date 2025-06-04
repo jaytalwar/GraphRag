@@ -1,4 +1,4 @@
-# Intern Project Timeline: Knowledge Graph Construction (5 Weeks)
+# Timeline: Knowledge Graph Construction
 
 This document outlines the tasks for project focused on building a knowledge graph from product documentation using Python, Neo4j, and Streamlit.
 
@@ -76,6 +76,25 @@ This document outlines the tasks for project focused on building a knowledge gra
     *   The deliverable is the `Retriever` class, with clear documentation on how to use it and examples.
     *   **(Stretch Goal for Week 5 / Further Work):** Begin developing a very simple User Interface (UI) using Streamlit. This UI should allow a user to type in a query, which then calls your `Retriever` class and displays the retrieved document snippets or their content.
 *   **Assigned to:** Aastha
+*   **Expected Delivery Date:** (To be filled by the intern)
+
+---
+
+### Task 5: Streamlit UI for Demonstration
+*   **Task ID:** T5
+*   **Task Description:**
+    *   Develop a user-friendly web interface using Streamlit to showcase the capabilities of the knowledge graph and retriever.
+    *   The UI should allow an end-user to:
+        *   Enter a natural language query related to the product documentation.
+        *   View the search results retrieved by the `Retriever` class (from Task T4).
+        *   Display the content of the relevant document sections in a readable format.
+    *   Consider adding features like:
+        *   Displaying metadata about the retrieved documents (e.g., source path, related topics).
+        *   Visualizing parts of the knowledge graph related to the query or results (optional, can be complex).
+        *   Basic error handling and user feedback.
+    *   Ensure the UI is intuitive and effectively demonstrates the project's value in navigating and understanding the product documentation.
+    *   The UI should primarily interact with the `Retriever` class built in Task T4.
+*   **Assigned to:** Jay
 *   **Expected Delivery Date:** (To be filled by the intern)
 
 --- 
