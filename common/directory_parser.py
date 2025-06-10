@@ -22,3 +22,41 @@ class DirectoryParser:
 
         for dirpath, dirnames, filenames in os.walk(self.root_path):
             self.process_folder(dirpath,dirnames,filenames)
+
+    def process_folder(self, dirpath, dirnames, filenames):
+        """ This function scans a folder to gather information about its subfolders and markdown files , and saves this structure as a JSON file  """
+        folder_children = []
+
+        for entry in sorted(dirnames + filenames):
+            entry_path = os.path.join(dirpath, entry)
+
+            if entry.startswith('.'):
+                continue
+            entry_type = 'directory' if os.path.isdir(entry_path) else 'file'
+            name = os.path.splitext(entry)[0] if entry_type == 'file' else entry
+
+            if entry_type == 'file' and not entry.endswith('.md'):
+                continue
+           
+            folder_children.append({
+                "name": name,
+                "type": entry_type,
+                "path": os.path.relpath(entry_path, self.root_path).replace('\\', '/')
+            })
+
+            if entry_type == 'file':
+                self.process_markdown_file(entry_path, folder_children)
+
+        if folder_children:
+            folder_json = {
+                "name": os.path.basename(dirpath),
+                "content": "",
+                "children": folder_children,
+                "path": os.path.relpath(dirpath, self.root_path).replace('\\', '/')
+            }
+            folder_name = os.path.basename(dirpath) or "root"
+            output_path = os.path.join(self.output_path, folder_name + ".json")
+            self._save_json(folder_json, output_path)
+
+            
+         
