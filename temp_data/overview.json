@@ -1,0 +1,6 @@
+{
+  "name": "overview",
+  "content": "API Overview Welcome to the Product Alpha API documentation. Our API is designed to be RESTful and provides access to various functionalities of Product Alpha. Authentication Details about API authentication methods will go here. Rate Limiting Information about API rate limits. Available Endpoints /users /products Further details for each endpoint will be provided in their respective sections.",
+  "children": [],
+  "path": "api/overview.md"
+}

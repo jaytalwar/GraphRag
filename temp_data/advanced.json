@@ -1,0 +1,12 @@
+{
+  "name": "advanced",
+  "content": "",
+  "children": [
+    {
+      "name": "advanced-feature-X",
+      "type": "file",
+      "path": "features/advanced/advanced-feature-X.md"
+    }
+  ],
+  "path": "features/advanced"
+}

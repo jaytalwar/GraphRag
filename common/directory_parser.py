@@ -58,5 +58,32 @@ class DirectoryParser:
             output_path = os.path.join(self.output_path, folder_name + ".json")
             self._save_json(folder_json, output_path)
 
-            
-         
+    def _process_markdown_file(self, file_path, folder_children):
+        """Clean and save individual markdown file as JSON."""
+        with open(file_path, 'r', encoding='utf-8') as file:
+            raw_content = file.read()
+
+        cleaned_content = self.clean_text(raw_content)
+        file_name = os.path.splitext(os.path.basename(file_path))[0]
+
+        json_data = {
+            "name": file_name,
+            "content": cleaned_content,
+            "children": [],
+            "path": os.path.relpath(file_path, self.root_path).replace('\\', '/')
+        }
+
+        rel_path = file_name
+        self._save_json(json_data, rel_path)
+
+    def _save_json(self, data, output_name):
+        """Save given data to a JSON file in the output path."""
+        output_path = os.path.join(self.output_path, output_name + ".json")
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+
+    @classmethod
+    def start(cls):
+        parser = cls()
+        parser.parse()
