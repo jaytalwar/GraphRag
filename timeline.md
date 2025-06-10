@@ -20,7 +20,7 @@ This document outlines the tasks for project focused on building a graph RAG fro
         *   `children`: An array of objects with keys - name and type (if any, based on subdirectories and documents).
     *   Store these JSON objects, as individual `.json` files in a new `/temp_data` directory.
 *   **Assigned to:** Aastha
-*   **Expected Delivery Date:** (To be filled by the intern)
+*   **Expected Delivery Date:** 11th June (Wed)
 
 ---
 
