@@ -1,5 +1,6 @@
 {
   "name": "api",
+  "type": "directory",
   "content": "",
   "children": [
     {

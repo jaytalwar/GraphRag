@@ -1,5 +1,6 @@
 {
   "name": "docs",
+  "type": "directory",
   "content": "",
   "children": [
     {

@@ -3,7 +3,11 @@ import json
 import re
 
 class DirectoryParser:
+    def __init__(self, directory_path):
+        self.directory_path = directory_path
 
+    def parse_directory(self):
+        pass
     def __init__(self, root_path='docs', output_path='temp_data'):
         """ Initialize root and output paths """        
         self.root_path = root_path
@@ -37,7 +41,7 @@ class DirectoryParser:
 
             if entry_type == 'file' and not entry.endswith('.md'):
                 continue
-           
+
             folder_children.append({
                 "name": name,
                 "type": entry_type,
@@ -50,6 +54,7 @@ class DirectoryParser:
         if folder_children:
             folder_json = {
                 "name": os.path.basename(dirpath),
+                "type":"directory",
                 "content": "",
                 "children": folder_children,
                 "path": os.path.relpath(dirpath, self.root_path).replace('\\', '/')
@@ -58,32 +63,32 @@ class DirectoryParser:
             output_path = os.path.join(self.output_path, folder_name + ".json")
             self._save_json(folder_json, output_path)
 
-    def _process_markdown_file(self, file_path, folder_children):
-        """Clean and save individual markdown file as JSON."""
+
+    def process_markdown_file(self, file_path, folder_children):
+        """ Clean and save individual markdown file as JSON. """
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_content = file.read()
-
+ 
         cleaned_content = self.clean_text(raw_content)
         file_name = os.path.splitext(os.path.basename(file_path))[0]
-
+ 
         json_data = {
             "name": file_name,
             "content": cleaned_content,
             "children": [],
             "path": os.path.relpath(file_path, self.root_path).replace('\\', '/')
         }
+ 
+        json_filename = file_name + '.json'
+        output_path = os.path.join(self.output_path, json_filename)
+        self._save_json(json_data, output_path)
 
-        rel_path = file_name
-        self._save_json(json_data, rel_path)
-
-    def _save_json(self, data, output_name):
-        """Save given data to a JSON file in the output path."""
-        output_path = os.path.join(self.output_path, output_name + ".json")
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    def _save_json(self, data, output_path):
+        """ Save given data to a JSON file in the output path. """
+        dir_name = os.path.dirname(output_path)
+        if dir_name:
+            os.makedirs(dir_name, exist_ok=True)
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
-    @classmethod
-    def start(cls):
-        parser = cls()
-        parser.parse()
+
