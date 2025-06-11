@@ -1,6 +1,6 @@
 {
   "name": "advanced-feature-X",
-  "content": "H1: Advanced Feature X\n\nThis document describes Advanced Feature X, which builds upon the core functionalities of Product Alpha.\n\nH2: Technical Details\nAdvanced Feature X uses a sophisticated algorithm to...\n\nH2: Dependencies\nL1:Requires Feature A to be configured.\nL1:May need specific API access, see .",
+  "content": "H1: Advanced Feature X\n\nThis document describes Advanced Feature X, which builds upon the core functionalities of Product Alpha.\n\nH2: Technical Details\nAdvanced Feature X uses a sophisticated algorithm to...\n\nH2: Dependencies\nL1: Requires Feature A to be configured.\nL1: May need specific API access, see .",
   "children": [],
   "path": "features/advanced/advanced-feature-X.md"
 }
