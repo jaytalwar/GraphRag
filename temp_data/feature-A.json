@@ -1,6 +1,6 @@
 {
   "name": "feature-A",
-  "content": "Feature A: Core Functionality Feature A is at the heart of Product Alpha, providing the essential tools for... Subfeature A.1 Details about subfeature A.1. Subfeature A.2 Details about subfeature A.2, which integrates with .",
+  "content": "H1: Feature A: Core Functionality\n\nFeature A is at the heart of Product Alpha, providing the essential tools for...\n\nH2: Sub-feature A.1\nDetails about sub-feature A.1.\n\nH2: Sub-feature A.2\nDetails about sub-feature A.2, which integrates with .",
   "children": [],
   "path": "features/feature-A.md"
 }
