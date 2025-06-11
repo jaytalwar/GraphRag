@@ -2,5 +2,6 @@
   "name": "installation",
   "content": "H1: Installation Guide\n\nThis guide will walk you through the steps to install Product Alpha.\n\nH2: Prerequisites\nL1: Python 3.8 or higher\nL1: Pip package manager\n\nH2: Steps\n1. Clone the repository: git clone https://example.com/product-alpha.git\n2. Navigate to the project directory: cd product-alpha\n3. Install dependencies: pip install -r requirements.txt\n\nOnce these steps are completed, you should be able to run Product Alpha.",
   "children": [],
+  "type": "file",
   "path": "getting-started/installation.md"
 }

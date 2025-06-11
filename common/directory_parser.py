@@ -8,6 +8,7 @@ class DirectoryParser:
         """Initialize root and output paths """       
         self.root_path = root_path
         self.output_path = output_path
+        os.makedirs(self.output_path, exist_ok=True)
 
     @staticmethod
     def clean_text(text, indent_width=4):
@@ -79,7 +80,7 @@ class DirectoryParser:
             }
             directory_name = os.path.basename(directory_path) or "root"
             output_path = os.path.join(self.output_path, directory_name + ".json")
-            self._save_json(directory_json, output_path)
+            self.save_json(directory_json, output_path)
 
     def process_markdown_file(self, file_path):
         """ Clean and save individual markdown file as JSON. """
@@ -93,17 +94,19 @@ class DirectoryParser:
             "name": file_name,
             "content": cleaned_content,
             "children": [],
+            "type": "file",
             "path": os.path.relpath(file_path, self.root_path).replace('\\', '/')
         }
 
         json_filename = file_name + '.json'
-        output_path = os.path.join(self.output_path, json_filename)
-        self._save_json(json_data, output_path)
+        output_file_path = os.path.join(self.output_path, json_filename)
+        self.save_json(json_data, output_file_path)
 
-    def _save_json(self, data, output_path):
+    def save_json(self, data, output_file_path):
         """ Save given data to a JSON file in the output path. """
-        dir_name = os.path.dirname(output_path)
-        if dir_name:
-            os.makedirs(dir_name, exist_ok=True)
-        with open(output_path, 'w', encoding='utf-8') as f:
+        with open(output_file_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
+
+
+
+
