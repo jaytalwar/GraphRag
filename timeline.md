@@ -37,7 +37,7 @@ This document outlines the tasks for project focused on building a graph RAG fro
     *   Establish relationships between these nodes based on the hierarchical structure identified in Task T1. For example, create a `CONTAINS` relationship from a parent document node to its child document/directory nodes.
     *   The primary deliverable is a Neo4j database populated with nodes representing each document and directory along with relationships representing their basic directory structure.
 *   **Assigned to:** Jay
-*   **Expected Delivery Date:** (To be filled by the intern)
+*   **Expected Delivery Date:18th June (Wed)
 
 ---
 
