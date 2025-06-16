@@ -34,32 +34,32 @@ class KnowledgeGraph:
         tx.run(query,path=node['path'],name=node['name'],
                 content=node.get('content',''),embedding=embedding)
  
-   def create_relationship(self, tx, parent_path, child_path):
-    """Creates a relationship between a parent and child node in the graph."""
-    query = self.queries["create_relationship"]
-    tx.run(query, parent_path=parent_path, child_path=child_path)
+    def create_relationship(self, tx, parent_path, child_path):
+        """Creates a relationship between a parent and child node in the graph."""
+        query = self.queries["create_relationship"]
+        tx.run(query, parent_path=parent_path, child_path=child_path)
 
     def build_graph(self):
-    """Builds the full graph by creating nodes and their parent-child relationships."""
-    self.load_json_files()
-    with self.driver.session() as session:
-        for node in self.json_nodes.values():
-            session.write_transaction(self.create_node, node)
-        for parent_node in self.json_nodes.values():
-            for child in parent_node.get('children', []):
-                child_path = child['path']
-                if child_path in self.json_nodes:
-                    session.write_transaction(
-                        self.create_relationship,
-                        parent_node['path'],
-                        child_path
-                    )
+        """Builds the full graph by creating nodes and their parent-child relationships."""
+        self.load_json_files()
+        with self.driver.session() as session:
+            for node in self.json_nodes.values():
+                session.write_transaction(self.create_node, node)
+            for parent_node in self.json_nodes.values():
+                for child in parent_node.get('children', []):
+                    child_path = child['path']
+                    if child_path in self.json_nodes:
+                        session.write_transaction(
+                            self.create_relationship,
+                            parent_node['path'],
+                            child_path
+                        )
 
     def run_query(self, query_name, parameters=None):
-    """Executes a named Cypher query with optional parameters."""
-    query = self.queries.get(query_name)
-    if not query:
-        raise ValueError(f"Query '{query_name}' not found in queries.json")
-    with self.driver.session() as session:
-        result = session.run(query, **(parameters or {}))
-        return [record.data() for record in result]
+        """Executes a named Cypher query with optional parameters."""
+        query = self.queries.get(query_name)
+        if not query:
+            raise ValueError(f"Query '{query_name}' not found in queries.json")
+        with self.driver.session() as session:
+            result = session.run(query, **(parameters or {}))
+            return [record.data() for record in result]
