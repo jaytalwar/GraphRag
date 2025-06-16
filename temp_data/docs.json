@@ -4,24 +4,29 @@
   "content": "",
   "children": [
     {
-      "name": "features",
+      "name": "admin-portal",
       "type": "directory",
-      "path": "features"
+      "path": "admin-portal"
     },
     {
-      "name": "getting-started",
+      "name": "member-portal",
       "type": "directory",
-      "path": "getting-started"
+      "path": "member-portal"
     },
     {
-      "name": "api",
+      "name": "superadmin-portal",
       "type": "directory",
-      "path": "api"
+      "path": "superadmin-portal"
     },
     {
-      "name": "index",
+      "name": "ussd",
+      "type": "directory",
+      "path": "ussd"
+    },
+    {
+      "name": "intro",
       "type": "file",
-      "path": "index.md"
+      "path": "intro.md"
     }
   ],
   "path": "."

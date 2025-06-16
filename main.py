@@ -21,7 +21,7 @@ def run_task_2(run_query_name=None):
     kg.build_graph()
 
     if run_query_name == "similarity_query":
-        query_text = "What is feature a?" 
+        query_text = "From where can I see loan arrears?" 
         print(query_text)
         embedding = processor.generate_embedding(query_text)
         results = kg.run_query("similarity_query", {"embedding": embedding, "top_k": 3})
@@ -38,8 +38,10 @@ def run_task_2(run_query_name=None):
     kg.close()
 
 if __name__ == "__main__":
-    #run_task_1()
+    run_task_1()
     run_task_2(run_query_name="similarity_query")
+    
+
     # run_task_2(run_query_name="show_all_nodes")
     # run_task_2(run_query_name="show_all_relationships")
     # run_task_2(run_query_name="count_nodes_by_label")
