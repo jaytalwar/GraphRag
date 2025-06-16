@@ -1,0 +1,13 @@
+{
+  "name": "getting-started",
+  "type": "directory",
+  "content": "",
+  "children": [
+    {
+      "name": "installation",
+      "type": "file",
+      "path": "getting-started/installation.md"
+    }
+  ],
+  "path": "getting-started"
+}

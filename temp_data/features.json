@@ -1,0 +1,18 @@
+{
+  "name": "features",
+  "type": "directory",
+  "content": "",
+  "children": [
+    {
+      "name": "advanced",
+      "type": "directory",
+      "path": "features/advanced"
+    },
+    {
+      "name": "feature-A",
+      "type": "file",
+      "path": "features/feature-A.md"
+    }
+  ],
+  "path": "features"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "docs",
+  "type": "directory",
+  "content": "",
+  "children": [
+    {
+      "name": "features",
+      "type": "directory",
+      "path": "features"
+    },
+    {
+      "name": "getting-started",
+      "type": "directory",
+      "path": "getting-started"
+    },
+    {
+      "name": "api",
+      "type": "directory",
+      "path": "api"
+    },
+    {
+      "name": "index",
+      "type": "file",
+      "path": "index.md"
+    }
+  ],
+  "path": "."
+}
