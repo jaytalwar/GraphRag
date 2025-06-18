@@ -11,13 +11,7 @@ class DirectoryParser:
 
     @staticmethod
     def clean_text(text, indent_width=4):
-        """
-        Clean markdown content:
-        - Remove code blocks and links
-        - Convert headings to H1, H2...
-        - Convert list items to L1, L2...
-        - Strip markdown symbols like *, >, `
-        """
+        """ Clean text using regex for code blocks, markdown symbols, etc and converting headings to H1,H2 etc. and list items to L1,L2 etc """
         text = re.sub(r'```.*?```', '', text, flags=re.DOTALL)
         text = re.sub(r'\[.*?\]\(.*?\)', '', text)
 
@@ -46,15 +40,12 @@ class DirectoryParser:
         return '\n'.join(new_lines)
 
     def parse(self):
-        """
-        Recursively walk through the root directory and process each
-        markdown file and folder into clean JSON format.
-        """
+        """ Recursively walks through the root directory and processes each Markdown (.md) file to extract content and structure, converting them into JSON format. """
         for directory_path, sub_directories, file_names in os.walk(self.root_path):
             self.process_directory(directory_path, sub_directories, file_names)
 
     def process_directory(self, directory_path, sub_directories, file_names):
-        """Create a JSON representation of each directory and its children."""
+        """ This function scans a directory to gather information about its subdirectories and markdown files, and saves this structure as a JSON file """
         children = []
 
         for sub_dir in sub_directories:
