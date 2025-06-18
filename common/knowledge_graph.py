@@ -40,9 +40,9 @@ class KnowledgeGraph:
         tx.run(query, parent_path=parent_path, child_path=child_path)
 
     def build_graph(self):
-        """Builds the full graph by creating nodes and their parent-child relationships."""
         self.load_json_files()
         with self.driver.session() as session:
+            session.run(self.queries["clear_graph"])
             for node in self.json_nodes.values():
                 session.write_transaction(self.create_node, node)
             for parent_node in self.json_nodes.values():
@@ -54,6 +54,7 @@ class KnowledgeGraph:
                             parent_node['path'],
                             child_path
                         )
+
 
     def run_query(self, query_name, parameters=None):
         """Executes a named Cypher query with optional parameters."""

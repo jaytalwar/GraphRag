@@ -42,6 +42,4 @@ if __name__ == "__main__":
     run_task_2(run_query_name="similarity_query")
     
 
-    # run_task_2(run_query_name="show_all_nodes")
-    # run_task_2(run_query_name="show_all_relationships")
-    # run_task_2(run_query_name="count_nodes_by_label")
+    
