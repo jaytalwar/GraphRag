@@ -1,7 +1,0 @@
-{
-  "name": "feature-A",
-  "content": "H1: Feature A: Core Functionality\n\nFeature A is at the heart of Product Alpha, providing the essential tools for...\n\nH2: Sub-feature A.1\nDetails about sub-feature A.1.\n\nH2: Sub-feature A.2\nDetails about sub-feature A.2, which integrates with .",
-  "children": [],
-  "type": "file",
-  "path": "features/feature-A.md"
-}
