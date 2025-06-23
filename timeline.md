@@ -50,7 +50,7 @@ This document outlines the tasks for project focused on building a graph RAG fro
     *   Design and implement a Python `DataProcessor` class that will contain methods to implement the Task T3.
     *   Define new relationship types in Neo4j to represent these discovered links (e.g., `RELATED_TO`).
 *   **Assigned to:** Harshika
-*   **Expected Delivery Date:** (To be filled by the intern)
+*   **Expected Delivery Date:** 25th June (Wed)
 
 ---
 
