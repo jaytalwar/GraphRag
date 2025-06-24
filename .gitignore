@@ -195,4 +195,5 @@ cython_debug/
 .cursorindexingignore
 
 temp_data/
+.vscode/
 
