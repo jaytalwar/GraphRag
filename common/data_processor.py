@@ -149,7 +149,7 @@ class DataProcessor:
                 created_links.add((p1, p2))
  
     def run(self, method: str = "bandpass", **kwargs):
-          """Run full pipeline: extract, filter, link nodes."""
+        """Run full pipeline: extract, filter, link nodes."""
         self.enrich_nodes_with_entities()
         self.filter_entities_by_frequency(min_freq=2, max_percentile=0.9)
  
