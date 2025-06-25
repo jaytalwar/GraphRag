@@ -3,6 +3,7 @@
   "create_relationship": "MATCH (parent { path: $parent_path })\nMATCH (child { path: $child_path })\nMERGE (parent)-[:CONTAINS]->(child)",
   "create_related_to": "MATCH (a { path: $path1 }), (b { path: $path2 }) MERGE (a)-[:RELATED_TO]->(b)",
   "similarity_query": "WITH $embedding AS queryEmbedding MATCH (n:File) WHERE n.embedding IS NOT NULL AND size(n.embedding) = size(queryEmbedding) WITH n, gds.similarity.cosine(n.embedding, queryEmbedding) AS similarity RETURN n.name AS name, n.path AS path, similarity ORDER BY similarity DESC LIMIT $top_k",
+  "get_neighbors": "MATCH (n:File {path: $path})-[:RELATED_TO]-(m:File) RETURN m.name AS name, m.path AS path ORDER BY m.name LIMIT 5",
   "show_full_graph": "MATCH (n)-[r]->(m)\nRETURN n.name AS From, type(r) AS Relationship, m.name AS To\nLIMIT 50",
   "count_all_nodes": "MATCH (n) RETURN count(n) AS total_nodes",
   "update_node_property": "MATCH (n { path: $path }) SET n[$key] = $value",
