@@ -72,7 +72,7 @@ This document outlines the tasks for project focused on building a graph RAG fro
         *   Consider how to rank or score the retrieved nodes/documents by relevance, if multiple results are found.
     *   The deliverable is the `GraphRAG` class, with clear documentation on how to use it and examples.
 *   **Assigned to:** Aastha
-*   **Expected Delivery Date:** (To be filled by the intern)
+*   **Expected Delivery Date:** 3rd July (Thursday)
 *   **Status:** (To be filled by the intern)
 ---
 
