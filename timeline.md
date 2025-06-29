@@ -21,6 +21,7 @@ This document outlines the tasks for project focused on building a graph RAG fro
     *   Store these JSON objects, as individual `.json` files in a new `/temp_data` directory.
 *   **Assigned to:** Aastha
 *   **Expected Delivery Date:** 11th June (Wed)
+*   **Status:** DONE
 
 ---
 
@@ -38,7 +39,8 @@ This document outlines the tasks for project focused on building a graph RAG fro
     *   The primary deliverable is a Neo4j database populated with nodes representing each document and directory along with relationships representing their basic directory structure.
 *   **Assigned to:** Jay
 *   **Expected Delivery Date:18th June (Wed)
-
+*   **Status:** DONE
+  
 ---
 
 ### Task 3: Identifying and Creating Additional Semantic Links
@@ -51,6 +53,7 @@ This document outlines the tasks for project focused on building a graph RAG fro
     *   Define new relationship types in Neo4j to represent these discovered links (e.g., `RELATED_TO`).
 *   **Assigned to:** Harshika
 *   **Expected Delivery Date:** 25th June (Wed)
+*   **Status:** DONE
 
 ---
 
@@ -70,7 +73,7 @@ This document outlines the tasks for project focused on building a graph RAG fro
     *   The deliverable is the `GraphRAG` class, with clear documentation on how to use it and examples.
 *   **Assigned to:** Aastha
 *   **Expected Delivery Date:** (To be filled by the intern)
-
+*   **Status:** (To be filled by the intern)
 ---
 
 ### Task 5: Streamlit UI for Demonstration
@@ -89,5 +92,6 @@ This document outlines the tasks for project focused on building a graph RAG fro
     *   The UI should primarily interact with the `GraphRAG` class built in Task T4.
 *   **Assigned to:** Jay
 *   **Expected Delivery Date:** (To be filled by the intern)
+*   **Status:** (To be filled by the intern)
 
 --- 
