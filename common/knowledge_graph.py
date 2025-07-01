@@ -55,8 +55,8 @@ class KnowledgeGraph:
                             parent_node['path'],
                             child_path
                         )
-
-
+ 
+ 
     def get_all_document_nodes(self):
         """Return a list of all file-type nodes with their path, name, and content."""
         return [
@@ -68,6 +68,7 @@ class KnowledgeGraph:
             for node in self.json_nodes.values()
             if node.get("type") == "file"
         ]
+       
                    
     def run_query(self, query_name, parameters=None):
         """Executes a named Cypher query with optional parameters."""
@@ -77,3 +78,9 @@ class KnowledgeGraph:
         with self.driver.session() as session:
             result = session.run(query, **(parameters or {}))
             return [record.data() for record in result]
+ 
+   
+    def get_node_by_path(self, path):
+        """Retrieve a single node from the graph based on its file path."""
+        results = self.run_query("get_node_by_path", {"path": path})
+        return results[0] if results else None
