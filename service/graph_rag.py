@@ -38,6 +38,52 @@ class GraphRAG:
         )
  
     def close(self):
-        """Gracefully close the Neo4j session."""
+        """Closes the Neo4j session."""
         self.kg.close()
+
+    def chat_interface(self, user_query: str) -> str:
+        """This method processes a user query by retrieving semantically similar documents and their neighbors from knowledge graph, builds a contextual passage, and uses a Hugging Face QA model to generate an answer based on that context."""
+        print(f"\n Processing query: {user_query}")
+        query_embedding = self.text_processor.generate_embedding(user_query)
+
+        top_results = self.kg.run_query("similarity_query", {
+            "embedding": query_embedding,
+            "top_k": self.top_k
+        })
+
+        if not top_results:
+            return "No answer found."
+
+        full_context = ""
+        used_paths = set()
+
+        for result in top_results:
+            path = result.get("path")
+            used_paths.add(path)
+            main_node = self.kg.get_node_by_path(path)
+            if main_node:
+                full_context += f"\n[{main_node['name']}]\n{main_node['content']}\n"
+
+            neighbors = self.kg.run_query("get_neighbors", {"path": path})[:self.neighbors_k]
+            for neighbor in neighbors:
+                n_path = neighbor.get("path")
+                if n_path not in used_paths:
+                    used_paths.add(n_path)
+                    neighbor_node = self.kg.get_node_by_path(n_path)
+                    if neighbor_node:
+                        full_context += f"\n[{neighbor_node['name']}]\n{neighbor_node['content']}\n"
+
+        if not full_context.strip():
+            return "No content available."
+
+
+        response = self.qa_client.question_answering(
+           question=user_query,
+           context=full_context
+           
+        )
+        final_answer = response.get("answer", "No answer found.")
+
+        print("\n Answer:", final_answer)
+        return final_answer    
  

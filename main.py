@@ -39,16 +39,10 @@ def run_task_2(run_query_name=None):
         })
  
         for r in results:
-            print(f"- {r['name']} (Path: {r['path']}, Similarity: {r['similarity']:.4f})")
             neighbors = kg.run_query("get_neighbors", {"path": r["path"]})
-            if neighbors:
-                for n in neighbors:
-                    print(f"     → {n['name']} (Path: {n['path']})")
  
     elif run_query_name:
         results = kg.run_query(run_query_name)
-        for r in results:
-            print(r)
  
     kg.close()
  
@@ -70,9 +64,30 @@ def run_task_3():
         min_hops=settings.DISTANCE_MIN_HOPS
     )
     kg.close()
+
+def run_task_4_cli():
+    rag = GraphRAG(
+        hf_model_name=settings.QA_MODEL,
+        hf_token=settings.HF_TOKEN,
+        top_k=3,
+        neighbors_k=3
+    )
+
+    print("Type 'exit' to quit.\n")
+
+    while True:
+        query = input("Question: ").strip()
+        if query.lower() in {"exit", "quit"}:
+            print("Exiting")
+            break
+
+        rag.chat_interface(query)
+
+    rag.close()
+
  
 if __name__ == "__main__":
     run_task_1()
     run_task_2(run_query_name="similarity_query")
     run_task_3()
- 
+    run_task_4_cli()
