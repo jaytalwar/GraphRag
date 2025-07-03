@@ -74,7 +74,7 @@ def run_task_4_cli():
         neighbors_k=3
     )
 
-    print("🤖 Ask me anything about the graph-based knowledge base.")
+    print(" Ask me anything about the graph-based knowledge base.")
     print("Type 'exit' to quit.\n")
 
     while True:
