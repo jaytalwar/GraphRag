@@ -66,7 +66,6 @@ def run_task_3():
     )
     kg.close()
 
-
 def run_task_4_cli():
     rag = GraphRAG(
         hf_token=settings.HF_TOKEN,

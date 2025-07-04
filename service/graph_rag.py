@@ -1,5 +1,7 @@
 import os
 import json
+from typing import List, Dict
+
 from huggingface_hub import InferenceClient
 from config.settings import (
     NEO4J_URI,
@@ -12,112 +14,126 @@ from config.settings import (
 from common.knowledge_graph import KnowledgeGraph
 from common.text_processor import TextProcessor
 
-
 class GraphRAG:
+    """Initialize the Graph‑RAG pipeline, models, and Neo4j connection."""
     def __init__(
         self,
-        hf_token=HF_TOKEN,
-        top_k=3,
-        neighbors_k=3
+        hf_token: str | None = None,
+        top_k: int = 3,
+        neighbors_k: int = 3,
     ):
-        """Initialize the Graph‑RAG pipeline and Neo4j connection."""
         self.top_k = top_k
         self.neighbors_k = neighbors_k
-        self.text_processor = TextProcessor(EMBEDDING_MODEL)
+        self.hf_token = HF_TOKEN
 
-        self.kg = KnowledgeGraph(
+        self.text_processor = TextProcessor(EMBEDDING_MODEL)
+        self.knowledge_graph = KnowledgeGraph(
             uri=NEO4J_URI,
             username=NEO4J_USERNAME,
             password=NEO4J_PASSWORD,
             data_directory=None,
-            text_processor=self.text_processor
+            text_processor=self.text_processor,
+        )
+        self.llm_client = InferenceClient(provider="auto", api_key=self.hf_token)
+
+        self.llm_model_name = QA_MODEL
+        self.model_template = self.load_model_template(self.llm_model_name)
+
+        self.chat_history: List[Dict[str, str]] = [] 
+    def load_model_template(self, model_name: str) -> dict:
+        """Load the JSON prompt template for the given model."""
+        base_name = model_name.split("/")[-1].lower().replace(" ", "-")
+        template_path = os.path.join("model_templates", f"{base_name}.json")
+        if not os.path.exists(template_path):
+            raise FileNotFoundError(f"Model template not found: {template_path}")
+        with open(template_path, "r", encoding="utf-8") as fp:
+            return json.load(fp)
+
+    def generate_messages(
+        self,
+        model_name: str,
+        user_query: str,
+        retrieved_context: str,
+    ) -> List[Dict[str, str]]:
+        """Create chat messages using the model's prompt template and past Q&A history."""
+        template = (
+            self.model_template
+            if model_name == self.llm_model_name
+            else self.load_model_template(model_name)
         )
 
-        self.qa_client = InferenceClient(
-            provider="auto",
-            api_key=hf_token,
+        system_prompt: str = template["system_prompt"]
+        user_blocks: List[Dict[str, str]] = template["user_template"]
+
+        messages: List[Dict[str, str]] = [{"role": "system", "content": system_prompt}]
+
+        for pair in self.chat_history[-5:]:
+            messages.append({"role": "user", "content": pair["question"]})
+            messages.append({"role": "assistant", "content": pair["answer"]})
+
+        composed_user_content = "\n".join(
+            block["text"]
+            .replace("{context}", retrieved_context.strip())
+            .replace("{question}", user_query.strip())
+            for block in user_blocks
         )
+        messages.append({"role": "user", "content": composed_user_content})
 
-        self.llm_model = QA_MODEL
-        self.template = self.load_model_template()
-
-    def load_model_template(self):
-        """Load prompt & message structure from model_templates/<model>.json"""
-        model_name = self.llm_model.split("/")[-1].lower().replace(" ", "-")
-        filename = f"{model_name}.json"
-        path = os.path.join("model_templates", filename)
-
-        if not os.path.exists(path):
-            raise FileNotFoundError(f"Model template not found: {path}")
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
-
-    def close(self):
-        self.kg.close()
+        return messages
 
     def chat_interface(self, user_query: str) -> str:
-        """Process user query, build context from KG, and use LLM to answer."""
+        """End‑to‑end: embed query, retrieve context, build prompt, query LLM, return answer."""
         print(f"\nProcessing query: {user_query}")
+
         query_embedding = self.text_processor.generate_embedding(user_query)
-
-        top_results = self.kg.run_query("similarity_query", {
-            "embedding": query_embedding,
-            "top_k": self.top_k
-        })
-
-        if not top_results:
+        top_nodes = self.knowledge_graph.run_query(
+            "similarity_query", {"embedding": query_embedding, "top_k": self.top_k}
+        )
+        if not top_nodes:
             return "No answer found."
+        context_text = ""
+        visited_paths: set[str] = set()
+        for node in top_nodes:
+            path = node.get("path")
+            visited_paths.add(path)
 
-        full_context = ""
-        used_paths = set()
-
-        for result in top_results:
-            path = result.get("path")
-            used_paths.add(path)
-            main_node = self.kg.get_node_by_path(path)
+            main_node = self.knowledge_graph.get_node_by_path(path)
             if main_node:
-                full_context += f"\n[{main_node['name']}]\n{main_node['content']}\n"
+                context_text += f"\n[{main_node['name']}]\n{main_node['content']}\n"
 
-            neighbors = self.kg.run_query("get_neighbors", {"path": path})[:self.neighbors_k]
-            for neighbor in neighbors:
-                n_path = neighbor.get("path")
-                if n_path not in used_paths:
-                    used_paths.add(n_path)
-                    neighbor_node = self.kg.get_node_by_path(n_path)
-                    if neighbor_node:
-                        full_context += f"\n[{neighbor_node['name']}]\n{neighbor_node['content']}\n"
+            neighbour_records = self.knowledge_graph.run_query(
+                "get_neighbors", {"path": path}
+            )[: self.neighbors_k]
+            for record in neighbour_records:
+                neighbour_path = record.get("path")
+                if neighbour_path not in visited_paths:
+                    visited_paths.add(neighbour_path)
+                    neighbour_node = self.knowledge_graph.get_node_by_path(neighbour_path)
+                    if neighbour_node:
+                        context_text += (
+                            f"\n[{neighbour_node['name']}]\n{neighbour_node['content']}\n"
+                        )
 
-        if not full_context.strip():
+        if not context_text.strip():
             return "No content available."
 
-        # Build messages using template
-        system_prompt = self.template["system_prompt"]
-        user_template = self.template["user_template"]
-
-        messages = [
-            {
-                "role": "system",
-                "content": [{"type": "text", "text": system_prompt}]
-            },
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": block["type"],
-                        "text": block["text"]
-                            .replace("{context}", full_context.strip())
-                            .replace("{question}", user_query.strip())
-                    }
-                    for block in user_template
-                ]
-            }
-        ]
-
-        response = self.qa_client.chat.completions.create(
-            model=self.llm_model,
-            messages=messages
+        messages = self.generate_messages(
+            self.llm_model_name, user_query, context_text
         )
+        response = self.llm_client.chat.completions.create(
+            model=self.llm_model_name, messages=messages
+        )
+        answer_text = response.choices[0].message.content.strip()
+        print("\nAnswer:", answer_text)
 
-        final_answer = response.choices[0].message.content.strip()
-        print("\nAnswer:", final_answer)
-        return final_answer
+        self.chat_history.append(
+            {"question": user_query.strip(), "answer": answer_text}
+        )
+        if len(self.chat_history) > 5:
+            self.chat_history.pop(0)
+
+        return answer_text
+
+    def close(self):
+        """Close the Neo4j driver."""
+        self.knowledge_graph.close()
