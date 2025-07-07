@@ -39,7 +39,7 @@ def get_rag() -> GraphRAG:
 
 def render():
     """Render the Task 4 chat interface."""
-    st.title("🧠 Task 4 – GraphRAG Chat")
+    st.title("Ask Me Anything !!")
     rag = get_rag()
 
     for question, answer, prompt in st.session_state.chat_turns:
