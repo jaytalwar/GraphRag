@@ -101,7 +101,10 @@ def run_ui():
         st.image("assets/logo.png", use_container_width=True)
  
  
-        st.markdown('<div class="sidebar-title"> CAMS Tasks</div>', unsafe_allow_html=True)
+        st.markdown(
+            '<div class="sidebar-title" style="text-align: center;">CAMS Tasks</div>',
+            unsafe_allow_html=True
+            )
  
         if st.button(" Home"):
             st.session_state.selected_task = "Home"

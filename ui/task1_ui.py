@@ -54,7 +54,7 @@ def render():
     st.title(" Markdown to JSON Parser")
  
     
-    if st.button(" Run Task 1"):
+    if st.button(" Parse Documents "):
         with st.spinner("Parsing Markdown files..."):
             try:
                 run_task_1()
@@ -102,7 +102,7 @@ def render():
             st.subheader(f" Original Markdown Content: `{os.path.relpath(md_path, DOCS_DIR)}`")
             st.text_area("Content", clean_markdown(md_content), height=300, disabled=True)
         else:
-            st.warning(" Corresponding `.md` file not found in `/docs/`.")
+            st.warning(" Corresponding `.md` file content  not found in `/docs/`.")
  
     except Exception as e:
         st.error(f"Error loading selected file: {e}")
