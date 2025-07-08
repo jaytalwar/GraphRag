@@ -67,7 +67,7 @@ class GraphRAG:
 
         messages: List[Dict[str, str]] = [{"role": "system", "content": system_prompt}]
 
-        for pair in self.chat_history[-5:]:
+        for pair in self.chat_history:
             messages.append({"role": "user", "content": pair["question"]})
             messages.append({"role": "assistant", "content": pair["answer"]})
 
@@ -129,7 +129,7 @@ class GraphRAG:
         self.chat_history.append(
             {"question": user_query.strip(), "answer": answer_text}
         )
-        if len(self.chat_history) > 5:
+        while len(self.chat_history) > 5:
             self.chat_history.pop(0)
 
         return answer_text

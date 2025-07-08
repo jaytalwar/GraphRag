@@ -7,7 +7,7 @@ from common.directory_parser import DirectoryParser
 from common.data_processor import DataProcessor
 from service.graph_rag import GraphRAG
 
-load_dotenv()
+
 
 def run_task_1():
     parser = DirectoryParser()
