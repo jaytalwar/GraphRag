@@ -92,6 +92,6 @@ This document outlines the tasks for project focused on building a graph RAG fro
     *   The UI should primarily interact with the `GraphRAG` class built in Task T4.
 *   **Assigned to:** Jay
 *   **Expected Delivery Date:** 7 July (Mon)
-*   **Status:** Making ui for all task 
+*   **Status:** Under Review
 
 --- 
