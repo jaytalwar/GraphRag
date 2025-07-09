@@ -24,7 +24,7 @@ class GraphRAG:
     ):
         self.top_k = top_k
         self.neighbors_k = neighbors_k
-        self.hf_token = HF_TOKEN
+        self.hf_token = hf_token
 
         self.text_processor = TextProcessor(EMBEDDING_MODEL)
         self.knowledge_graph = KnowledgeGraph(
