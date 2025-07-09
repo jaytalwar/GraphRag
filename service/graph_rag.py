@@ -134,6 +134,10 @@ class GraphRAG:
 
         return answer_text
 
+    def clear_history(self):
+        """Forget every stored Q&A turn."""
+        self.chat_history.clear()
+
     def close(self):
         """Close the Neo4j driver."""
         self.knowledge_graph.close()
