@@ -8,7 +8,7 @@ import streamlit.components.v1 as components
 
 
 def fetch_graph_data(selected_nodes=None, relation_types=("CONTAINS", "RELATED_TO")):
-    """ Fetch nodes and edges from the Neo4j graph database (full graph or selected subgraph) """
+    """Fetch nodes and edges from the neo4j graph database"""
     driver = GraphDatabase.driver(
         settings.NEO4J_URI,
         auth=(settings.NEO4J_USERNAME, settings.NEO4J_PASSWORD)
@@ -48,6 +48,24 @@ def fetch_graph_data(selected_nodes=None, relation_types=("CONTAINS", "RELATED_T
                     tgt = str(rel.end_node.id)
                     rel_type = rel.type
                     edges.add((src, tgt, rel_type))
+
+            query = """
+            MATCH (n)
+            WHERE n.name IN $selected
+            RETURN id(n) AS id, properties(n) AS props
+            """
+            result = session.run(query, selected=selected_nodes)
+            for record in result:
+                node_id = str(record["id"])
+                if node_id not in nodes:
+                    props = record["props"]
+                    nodes[node_id] = {
+                        "id": node_id,
+                        "label": props.get("name", f"Unnamed-{node_id}"),
+                        "title": str(props),
+                        "props": props
+                    }
+
         else:
             query = """
             MATCH (n)-[r]->(m)
@@ -84,7 +102,7 @@ def fetch_graph_data(selected_nodes=None, relation_types=("CONTAINS", "RELATED_T
 
 
 def fetch_all_node_names():
-    """ Fetch all unique node names from the Neo4j database for dropdown selection."""
+    """Fetch all node names from neo4j database for dropdown selection """
     driver = GraphDatabase.driver(
         settings.NEO4J_URI,
         auth=(settings.NEO4J_USERNAME, settings.NEO4J_PASSWORD)
@@ -95,8 +113,9 @@ def fetch_all_node_names():
     driver.close()
     return names
 
+
 def visualize_with_pyvis(nodes, edges):
-    """ Create an interactive graph visualization using Pyvis and save it as HTML. """
+    """Create an graph visualization using pyvis and save it in html"""
     net = Network(height="750px", width="100%", directed=True, notebook=False)
     net.barnes_hut()
 
@@ -142,7 +161,7 @@ def visualize_with_pyvis(nodes, edges):
 
 
 def render():
-    """ Render the Task 2 UI for knowledge graph visualization and semantic linking. """
+    """Render the task2 ui for knowledge graph visualization and semantic linking"""
     st.title("Knowledge Graph and Semantic Linking")
 
     all_nodes = fetch_all_node_names()
@@ -161,17 +180,22 @@ def render():
         st.warning("Please select at least one relationship type.")
         return
 
-    with st.expander("🔍 Show / Hide Graph Visualization", expanded=True):
+    with st.expander(" Show / Hide Graph Visualization", expanded=True):
         if st.button("Visualize Selected Subgraph"):
             if not selected:
                 st.warning("Select one or more nodes to begin.")
                 return
             with st.spinner("Loading subgraph..."):
                 nodes, edges = fetch_graph_data(selected_nodes=selected, relation_types=rel_types)
-                if not nodes:
-                    st.warning("No nodes/relationships found.")
+
+                if not nodes and not edges:
+                    st.warning("No nodes or relationships found.")
                     return
-                st.success(f"Loaded {len(nodes)} nodes and {len(edges)} relationships.")
+                elif nodes and not edges:
+                    st.info(f"{len(nodes)} node(s) found but no relationships exist among them.")
+                else:
+                    st.success(f"Loaded {len(nodes)} nodes and {len(edges)} relationships.")
+
                 html_path = visualize_with_pyvis(nodes, edges)
                 with open(html_path, "r", encoding="utf-8") as f:
                     components.html(f.read(), height=800, scrolling=True)
