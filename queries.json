@@ -8,5 +8,6 @@
   "count_all_nodes": "MATCH (n) RETURN count(n) AS total_nodes",
   "update_node_property": "MATCH (n { path: $path }) SET n[$key] = $value",
   "clear_graph": "MATCH (n) DETACH DELETE n",
-  "get_shortest_path_length": "MATCH (a {path: $path1}), (b {path: $path2}) MATCH path = shortestPath((a)-[*]-(b)) RETURN length(path) AS length"
+  "get_shortest_path_length": "MATCH (a {path: $path1}), (b {path: $path2}) MATCH path = shortestPath((a)-[*]-(b)) RETURN length(path) AS length",
+  "get_node_by_path": "MATCH (n {path: $path}) RETURN n.name AS name, n.content AS content"
 }
