@@ -4,6 +4,7 @@ class TextProcessor:
 
     def __init__(self, model_name='all-MiniLM-L6-v2'):
         """Load the specified SentenceTransformer model into memory for text encoding."""
+        device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model = SentenceTransformer(model_name)
 
     def generate_embedding(self, text):
