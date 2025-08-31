@@ -24,7 +24,7 @@ class GraphRAG:
     ):
         self.top_k = top_k
         self.neighbors_k = neighbors_k
-        self.hf_token = hf_token
+        self.hf_token = HF_TOKEN
 
         self.text_processor = TextProcessor(EMBEDDING_MODEL)
         self.knowledge_graph = KnowledgeGraph(
@@ -39,7 +39,8 @@ class GraphRAG:
         self.llm_model_name = QA_MODEL
         self.model_template = self.load_model_template(self.llm_model_name)
 
-        self.chat_history: List[Dict[str, str]] = [] 
+        self.chat_history: List[Dict[str, str]] = []
+         
     def load_model_template(self, model_name: str) -> dict:
         """Load the JSON prompt template for the given model."""
         base_name = model_name.split("/")[-1].lower().replace(" ", "-")
@@ -67,7 +68,7 @@ class GraphRAG:
 
         messages: List[Dict[str, str]] = [{"role": "system", "content": system_prompt}]
 
-        for pair in self.chat_history:
+        for pair in self.chat_history[-5:]:
             messages.append({"role": "user", "content": pair["question"]})
             messages.append({"role": "assistant", "content": pair["answer"]})
 
@@ -129,7 +130,7 @@ class GraphRAG:
         self.chat_history.append(
             {"question": user_query.strip(), "answer": answer_text}
         )
-        while len(self.chat_history) > 5:
+        if len(self.chat_history) > 5:
             self.chat_history.pop(0)
 
         return answer_text
